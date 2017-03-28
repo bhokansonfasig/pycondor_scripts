@@ -38,7 +38,8 @@ job = Job(script_name, script_file,
           log=log, submit=submit, verbose=2)
 
 # Adding arguments to job
-job.add_arg(" ".join(options))
+if len(options)>0:
+    job.add_arg(" ".join(options))
 
 # Write all necessary submit files and submit job to Condor
 job.build_submit()
