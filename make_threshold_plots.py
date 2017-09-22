@@ -20,8 +20,8 @@ from pycondor import Job
 
 
 # Get script and options
-script_file = "/home/fasig/scalable_radio_array/threshold_plotter.py"
-options = [script_file] + sys.argv[1:]
+script_file = "/home/fasig/scalable_radio_array/threshold_plotter.sh"
+options = sys.argv[1:]
 
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
@@ -30,7 +30,7 @@ log = '/data/user/fasig/pycondor'
 submit = '/data/user/fasig/pycondor'
 
 # Setting up a PyCondor Job
-job = Job("threshold_plotter", "/home/fasig/anaconda3/bin/python",
+job = Job(str(options)+" threshold_plotter", script_file,
           error=error, output=output,
           log=log, submit=submit, verbose=2)
 
