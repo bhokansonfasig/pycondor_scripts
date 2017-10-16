@@ -25,6 +25,11 @@ options = sys.argv[1:]
 
 descriptive_name = "full_sim_"+sys.argv[1]+"_"+sys.argv[2]
 
+if "-n" in sys.argv:
+    descriptive_name += "_n"+sys.argv[sys.argv.index("-n")+1]
+else:
+    descriptive_name += "_n10"
+
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
 output = '/data/user/fasig/pycondor'
