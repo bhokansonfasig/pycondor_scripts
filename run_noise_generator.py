@@ -24,8 +24,8 @@ from pycondor import Job, Dagman
 generator_script = "/home/fasig/scalable_radio_array/noise_writer.sh"
 processor_script = "/home/fasig/scalable_radio_array/envelope_processor.sh"
 
-n_jobs = sys.argv[1]
-zero_padding = len(str(n_jobs))
+n_jobs = int(sys.argv[1])
+zero_padding = len(str(n_jobs-1))
 
 basename = os.path.basename(sys.argv[2])
 
