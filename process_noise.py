@@ -20,7 +20,7 @@ from pycondor import Job
 
 
 # Get script and options
-script_file = "/home/fasig/scalable_radio_array/noise_generator.sh"
+script_file = "/home/fasig/scalable_radio_array/envelope_processor.sh"
 options = sys.argv[1:]
 
 descriptive_name = "process_noise_"+sys.argv[1][:-4].rstrip("_0123456789")

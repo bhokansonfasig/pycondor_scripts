@@ -20,7 +20,7 @@ from pycondor import Job
 
 
 # Get script and options
-script_file = "/home/fasig/scalable_radio_array/noise_generator.sh"
+script_file = "/home/fasig/scalable_radio_array/noise_writer.sh"
 options = sys.argv[1:]
 
 descriptive_name = "make_noise_"+sys.argv[1]
