@@ -14,6 +14,7 @@ from __future__ import division, print_function
 
 # Standard libraries
 import sys
+import os.path
 
 # Custom libraries
 from pycondor import Job
@@ -23,7 +24,7 @@ from pycondor import Job
 script_file = "/home/fasig/scalable_radio_array/noise_writer.sh"
 options = sys.argv[1:]
 
-descriptive_name = "make_noise_"+sys.argv[1]
+descriptive_name = "make_noise_"+os.path.basename(sys.argv[1])
 
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
