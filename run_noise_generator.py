@@ -73,7 +73,8 @@ processor_job = Job("process_noise_"+basename, processor_script,
                     log=log, submit=submit, verbose=2)
 
 
-output_suffixes = [str(i).zfill(file_zero_padding) for i in range(max_file_index)]
+output_suffixes = [str(i).zfill(file_zero_padding)
+                   for i in range(max_file_index+1)]
 
 # Add arguments to jobs
 for i in range(args.jobs):
