@@ -90,7 +90,7 @@ for i in range(args.jobs):
         files = [filename+"_"+suffix+".npz" for suffix in output_suffixes]
     else:
         files = [filename+".npz"]
-    arugments = " ".join(files)
+    arguments = " ".join(files)
     arguments += " --output " + str(args.envelope)
     arguments += " --amplification " + str(args.amplification)
     processor_job.add_arg(arguments)
