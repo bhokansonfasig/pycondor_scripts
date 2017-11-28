@@ -35,9 +35,9 @@ parser.add_argument('-s', '--stations', type=int, default=625,
                     help="number of stations (default 625)")
 parser.add_argument('-g', '--geometry', type=int, default=1,
                     help="station geometry code "+
-                            "(0 = single string of 4 antennas,"+
-                            " 1 = 4 strings of 4 antennas;
-                            " default 1)")
+                         "(0 = single string of 4 antennas,"+
+                         " 1 = 4 strings of 4 antennas;"+
+                         " default 1)")
 parser.add_argument('-t', '--threshold', type=float, default=2.5,
                     help="trigger threshold (default 2.5)")
 parser.add_argument('--tot', type=float, default=0,
