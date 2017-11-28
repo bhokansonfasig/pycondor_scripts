@@ -47,10 +47,6 @@ parser.add_argument('-a', '--antennas_hit', type=int, default=0,
 
 args = parser.parse_args()
 
-job_zero_padding = len(str(args.jobs-1))
-max_file_index = int((args.number-1)/args.size)
-file_zero_padding = len(str(max_file_index))
-add_file_indices = max_file_index!=0
 
 basename = os.path.basename(args.noise_file_basename)
 
