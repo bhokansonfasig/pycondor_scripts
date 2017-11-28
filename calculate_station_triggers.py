@@ -73,7 +73,7 @@ dirname = os.path.dirname(args.noise_file_basename)
 if dirname=="":
     dirname = "."
 file_bases = []
-for filename in os.listdir(dirname):
+for filename in sorted(os.listdir(dirname)):
     filename = filename[:filename.rindex("_")]
     if filename.startswith(basename) and not(filename in file_bases):
         file_bases.append(filename)
