@@ -76,7 +76,7 @@ file_bases = []
 for filename in sorted(os.listdir(dirname)):
     filename = filename[:filename.rindex("_")]
     if filename.startswith(basename) and not(filename in file_bases):
-        file_bases.append(filename)
+        file_bases.append(os.path.join(dirname, filename))
 
 for basename in file_bases:
     arguments = basename
