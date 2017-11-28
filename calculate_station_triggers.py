@@ -76,10 +76,10 @@ file_bases = []
 for filename in sorted(os.listdir(dirname)):
     filename = filename[:filename.rindex("_")]
     if filename.startswith(basename) and not(filename in file_bases):
-        file_bases.append(os.path.join(dirname, filename))
+        file_bases.append(filename)
 
-for basename in file_bases:
-    arguments = basename
+for base in file_bases:
+    arguments = os.path.join(os.path.dirname(args.noise_file_basename), base)
     arguments += " " + str(args.outfile)
     arguments += " --range " + str(args.range[0]) + " " + str(args.range[1])
     arguments += " --stations " + str(args.stations)
