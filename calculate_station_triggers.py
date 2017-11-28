@@ -81,7 +81,7 @@ for filename in sorted(os.listdir(dirname)):
 for basename in file_bases:
     arguments = basename
     arguments += " " + str(args.outfile)
-    arguments += " --range " + str(args.range)
+    arguments += " --range " + str(args.range[0]) + " " + str(args.range[1])
     arguments += " --stations " + str(args.stations)
     arguments += " --geometry " + str(args.geometry)
     arguments += " --threshold " + str(args.threshold)
