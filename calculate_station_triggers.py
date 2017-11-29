@@ -60,7 +60,7 @@ log = '/data/user/fasig/pycondor'
 submit = '/data/user/fasig/pycondor'
 
 
-memory_requirement = str(int(args.stations/250)+1)+"GB"
+memory_requirement = str(int(args.stations/100)+1)+"GB"
 
 # Setting up PyCondor Jobs
 calculator_job = Job("calculate_"+basename, script,
