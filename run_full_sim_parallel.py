@@ -55,7 +55,7 @@ job = Job(descriptive_name, script_file,
 # Adding arguments to job
 for energy in energies:
     for _ in range(iterations):
-        job.add_arg(" ".join([energy]+options))
+        job.add_arg(" ".join([str(energy)]+options))
 
 # Write all necessary submit files and submit job to Condor
 job.build_submit()
