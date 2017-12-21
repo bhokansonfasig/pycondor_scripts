@@ -29,7 +29,7 @@ energies = ["1e6", "2e6", "5e6",
             "1e10"]
 
 iterations = int(sys.argv[1])
-zfill_amount = len(str(iterations+1))
+zfill_amount = len(str(iterations))
 
 options = sys.argv[2:]
 
