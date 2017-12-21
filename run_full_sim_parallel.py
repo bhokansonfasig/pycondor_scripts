@@ -29,7 +29,7 @@ energies = ["1e6", "2e6", "5e6",
             "1e10"]
 
 iterations = int(sys.argv[1])
-zfill_amount = len(str(iterations))
+zfill_amount = len(str(iterations-1))
 
 options = sys.argv[2:]
 
@@ -64,7 +64,7 @@ for energy in energies:
         if output_index!=-1:
             replaced_name = output_name.replace("ENERGY", energy)
             replaced_name = replaced_name.replace("ITERATION",
-                                                  str(i+1).zfill(zfill_amount))
+                                                  str(i).zfill(zfill_amount))
             options[output_index] = replaced_name
         job.add_arg(" ".join([energy]+options))
 
