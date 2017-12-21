@@ -29,6 +29,7 @@ energies = ["1e6", "2e6", "5e6",
             "1e10"]
 
 iterations = int(sys.argv[1])
+zfill_amount = len(str(iterations+1))
 
 options = sys.argv[2:]
 
@@ -59,9 +60,12 @@ job = Job(descriptive_name, script_file,
 
 # Adding arguments to job
 for energy in energies:
-    if output_index!=-1:
-        options[output_index] = output_name.replace("ENERGY", energy)
-    for _ in range(iterations):
+    for i in range(iterations):
+        if output_index!=-1:
+            replaced_name = output_name.replace("ENERGY", energy)
+            replaced_name = replaced_name.replace("ITERATION",
+                                                  str(i+1).zfill(zfill_amount))
+            options[output_index] = replaced_name
         job.add_arg(" ".join([energy]+options))
 
 # Write all necessary submit files and submit job to Condor
