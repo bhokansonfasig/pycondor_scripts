@@ -22,11 +22,11 @@ from pycondor import Job
 # Get script and options
 script_file = "/home/fasig/scalable_radio_array/full_sim.sh"
 
-energies = [1e6, 2e6, 5e6,
-            1e7, 2e7, 5e7,
-            1e8, 2e8, 5e8,
-            1e9, 2e9, 5e9,
-            1e10]
+energies = ["1e6", "2e6", "5e6",
+            "1e7", "2e7", "5e7",
+            "1e8", "2e8", "5e8",
+            "1e9", "2e9", "5e9",
+            "1e10"]
 
 iterations = int(sys.argv[1])
 
@@ -41,6 +41,11 @@ else:
 
 descriptive_name += "x"+str(iterations)
 
+output_index = -1
+if "-o" in options:
+    output_index = options.index("-o") + 1
+    output_name = options[output_index]
+
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
 output = '/data/user/fasig/pycondor'
@@ -54,8 +59,10 @@ job = Job(descriptive_name, script_file,
 
 # Adding arguments to job
 for energy in energies:
+    if output_index!=-1:
+        options[output_index] = output_name.replace("ENERGY", energy)
     for _ in range(iterations):
-        job.add_arg(" ".join([str(energy)]+options))
+        job.add_arg(" ".join([energy]+options))
 
 # Write all necessary submit files and submit job to Condor
 job.build_submit()
