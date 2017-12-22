@@ -56,7 +56,8 @@ submit = '/data/user/fasig/pycondor'
 # Setting up a PyCondor Job
 job = Job(descriptive_name, script_file,
           error=error, output=output,
-          log=log, submit=submit, verbose=2)
+          log=log, submit=submit, verbose=2,
+          request_memory="5GB")
 
 # Adding arguments to job
 for energy in energies:
