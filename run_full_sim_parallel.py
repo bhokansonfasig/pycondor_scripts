@@ -52,7 +52,7 @@ else:
     script_file = "/home/fasig/scalable_radio_array/full_sim.sh"
     descriptive_name = "full_sim_"+args.full_sim_options[0]
 
-if "-n" in args.options:
+if "-n" in args.full_sim_options:
     descriptive_name += "_n"+args.full_sim_options[args.full_sim_options.index("-n")+1]
 else:
     descriptive_name += "_n10"
@@ -63,7 +63,7 @@ descriptive_name += "x"+str(args.iterations)
 zfill_amount = len(str(args.iterations-1))
 
 output_index = -1
-if "-o" in args.options:
+if "-o" in args.full_sim_options:
     output_index = args.full_sim_options.index("-o") + 1
     output_name = args.full_sim_options[output_index]
 
