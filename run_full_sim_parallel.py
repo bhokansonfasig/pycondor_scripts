@@ -36,24 +36,22 @@ parser.add_argument('--energies', nargs='+', default=default_energies,
 parser.add_argument('--ara', action="store_true",
                     help="""If present, full_sim_ara script will be used
                          instead of full_sim script""")
-parser.add_argument('--pass', action="store_true",
-                    help="""Does nothing. Useful for separating off which
-                         arguments should be passed to full_sim scripts""")
-parser.add_argument('full_sim_options', nargs=argparse.REMAINDER,
-                    help="additional options passed on to full_sim scripts")
+parser.add_argument('--args', nargs=argparse.REMAINDER,
+                    help="""Additional arguments beyond this are passed on
+                         to the full_sim scripts""")
 
 args = parser.parse_args()
 
 # Set script and name
 if args.ara:
     script_file = "/home/fasig/scalable_radio_array/full_sim_ara.sh"
-    descriptive_name = "full_sim_ara_"+args.full_sim_options[0]
+    descriptive_name = "full_sim_ara_"+args.args[0]
 else:
     script_file = "/home/fasig/scalable_radio_array/full_sim.sh"
-    descriptive_name = "full_sim_"+args.full_sim_options[0]
+    descriptive_name = "full_sim_"+args.args[0]
 
-if "-n" in args.full_sim_options:
-    descriptive_name += "_n"+args.full_sim_options[args.full_sim_options.index("-n")+1]
+if "-n" in args.args:
+    descriptive_name += "_n"+args.args[args.args.index("-n")+1]
 else:
     descriptive_name += "_n10"
 
@@ -63,9 +61,9 @@ descriptive_name += "x"+str(args.iterations)
 zfill_amount = len(str(args.iterations-1))
 
 output_index = -1
-if "-o" in args.full_sim_options:
-    output_index = args.full_sim_options.index("-o") + 1
-    output_name = args.full_sim_options[output_index]
+if "-o" in args.args:
+    output_index = args.args.index("-o") + 1
+    output_name = args.args[output_index]
 
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
@@ -86,8 +84,8 @@ for energy in args.energies:
             replaced_name = output_name.replace("ENERGY", energy)
             replaced_name = replaced_name.replace("ITERATION",
                                                   str(i).zfill(zfill_amount))
-            args.full_sim_options[output_index] = replaced_name
-        job.add_arg(" ".join([energy]+args.full_sim_options))
+            args.args[output_index] = replaced_name
+        job.add_arg(" ".join([energy]+args.args))
 
 # Write all necessary submit files and submit job to Condor
 job.build_submit()
