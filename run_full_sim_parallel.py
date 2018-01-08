@@ -6,7 +6,7 @@
 #
 # Ben Hokanson-Fasig
 # Created   12/21/17
-# Last edit 12/21/17
+# Last edit 01/08/18
 #
 
 
@@ -44,16 +44,13 @@ parser.add_argument('options', nargs=argparse.REMAINDER,
 
 args = parser.parse_args()
 
-# Get script and options
+# Set script and name
 if args.ara:
     script_file = "/home/fasig/scalable_radio_array/full_sim_ara.sh"
+    descriptive_name = "full_sim_ara_"+args.options[0]
 else:
     script_file = "/home/fasig/scalable_radio_array/full_sim.sh"
-
-
-zfill_amount = len(str(args.iterations-1))
-
-descriptive_name = "full_sim_"+args.options[0]
+    descriptive_name = "full_sim_"+args.options[0]
 
 if "-n" in args.options:
     descriptive_name += "_n"+args.options[args.options.index("-n")+1]
@@ -61,6 +58,9 @@ else:
     descriptive_name += "_n10"
 
 descriptive_name += "x"+str(args.iterations)
+
+
+zfill_amount = len(str(args.iterations-1))
 
 output_index = -1
 if "-o" in args.options:
