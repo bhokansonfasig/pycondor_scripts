@@ -39,7 +39,7 @@ parser.add_argument('--ara', action="store_true",
 parser.add_argument('--pass', action="store_true",
                     help="""Does nothing. Useful for separating off which
                          arguments should be passed to full_sim scripts""")
-parser.add_argument('options', nargs=argparse.REMAINDER,
+parser.add_argument('full_sim_options', nargs=argparse.REMAINDER,
                     help="additional options passed on to full_sim scripts")
 
 args = parser.parse_args()
@@ -47,13 +47,13 @@ args = parser.parse_args()
 # Set script and name
 if args.ara:
     script_file = "/home/fasig/scalable_radio_array/full_sim_ara.sh"
-    descriptive_name = "full_sim_ara_"+args.options[0]
+    descriptive_name = "full_sim_ara_"+args.full_sim_options[0]
 else:
     script_file = "/home/fasig/scalable_radio_array/full_sim.sh"
-    descriptive_name = "full_sim_"+args.options[0]
+    descriptive_name = "full_sim_"+args.full_sim_options[0]
 
 if "-n" in args.options:
-    descriptive_name += "_n"+args.options[args.options.index("-n")+1]
+    descriptive_name += "_n"+args.full_sim_options[args.full_sim_options.index("-n")+1]
 else:
     descriptive_name += "_n10"
 
@@ -64,8 +64,8 @@ zfill_amount = len(str(args.iterations-1))
 
 output_index = -1
 if "-o" in args.options:
-    output_index = args.options.index("-o") + 1
-    output_name = args.options[output_index]
+    output_index = args.full_sim_options.index("-o") + 1
+    output_name = args.full_sim_options[output_index]
 
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
@@ -86,8 +86,8 @@ for energy in args.energies:
             replaced_name = output_name.replace("ENERGY", energy)
             replaced_name = replaced_name.replace("ITERATION",
                                                   str(i).zfill(zfill_amount))
-            args.options[output_index] = replaced_name
-        job.add_arg(" ".join([energy]+args.options))
+            args.full_sim_options[output_index] = replaced_name
+        job.add_arg(" ".join([energy]+args.full_sim_options))
 
 # Write all necessary submit files and submit job to Condor
 job.build_submit()
