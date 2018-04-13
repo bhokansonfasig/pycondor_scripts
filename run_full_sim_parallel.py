@@ -65,6 +65,11 @@ if "-o" in args.args:
     output_index = args.args.index("-o") + 1
     output_name = args.args[output_index]
 
+logfile_index = -1
+if "-l" in args.args:
+    logfile_index = args.args.index("-l") + 1
+    logfile_name = args.args[logfile_index]
+
 # Declare the error, output, log, and submit directories for Condor Job
 error = '/data/user/fasig/pycondor'
 output = '/data/user/fasig/pycondor'
@@ -85,6 +90,13 @@ for energy in args.energies:
             replaced_name = replaced_name.replace("ITERATION",
                                                   str(i).zfill(zfill_amount))
             args.args[output_index] = replaced_name
+        if logfile_index!=-1:
+            o = args.args[output_index]
+            replaced_name = logfile_name.replace("OUTPUT", o[:o.rindex(".")])
+            replaced_name = replaced_name.replace("ENERGY", energy)
+            replaced_name = replaced_name.replace("ITERATION",
+                                                  str(i).zfill(zfill_amount))
+            args.args[logfile_index] = replaced_name
         job.add_arg(" ".join([energy]+args.args))
 
 # Write all necessary submit files and submit job to Condor
