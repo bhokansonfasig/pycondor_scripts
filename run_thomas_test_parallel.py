@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 #
-# run_full_sim_parallel.py
-# Script for submitting many full_sim scripts to HTCondor easily
+# run_thomas_test_parallel.py
+# Script for submitting many thomas_test scripts to HTCondor easily
 #
 #
 # Ben Hokanson-Fasig
-# Created   12/21/17
-# Last edit 01/08/18
+# Created   07/11/18
+# Last edit 07/11/18
 #
 
 
@@ -18,47 +18,26 @@ import argparse
 # Custom libraries
 from pycondor import Job
 
-default_energies = ["1e6", "2e6", "5e6",
-                    "1e7", "2e7", "5e7",
-                    "1e8", "2e8", "5e8",
-                    "1e9", "2e9", "5e9",
-                    "1e10"]
+default_energies = ["1e8", "1e9", "1e10"]
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="""Script for submitting many
-                                 full_sim scripts to HTCondor easily.""")
+                                 thomas_test scripts to HTCondor easily.""")
 parser.add_argument('iterations', type=int,
-                    help="""Number of iterations to run (each full_sim script
+                    help="""Number of iterations to run (each script
                          with different options submitted this many times)""")
 parser.add_argument('--energies', nargs='+', default=default_energies,
                     help="""Energies over which to run simulations
-                         (defaults to 13 energies between 1e6 and 1e10)""")
-parser.add_argument('--ara', action="store_true",
-                    help="""If present, full_sim_ara script will be used
-                         instead of full_sim script""")
-parser.add_argument('--straw', action="store_true",
-                    help="""If present, full_sim_strawman script will be used
-                         instead of full_sim script""")
+                         (defaults to 3 energies between 1e8 and 1e10)""")
 parser.add_argument('--args', nargs=argparse.REMAINDER,
                     help="""Additional arguments beyond this are passed on
                          to the full_sim scripts""")
 
 args = parser.parse_args()
 
-# Prevent multiple script arguments
-if args.ara and args.straw:
-    raise ValueError("Multiple script options not allowed!")
-
 # Set script and name
-if args.ara:
-    script_file = "/home/fasig/scalable_radio_array/full_sim_ara.sh"
-    descriptive_name = "full_sim_ara_"+args.args[0]
-elif args.straw:
-    script_file = "/home/fasig/scalable_radio_array/full_sim_strawman.sh"
-    descriptive_name = "full_sim_straw_"+args.args[0]
-else:
-    script_file = "/home/fasig/scalable_radio_array/full_sim.sh"
-    descriptive_name = "full_sim_"+args.args[0]
+script_file = "/home/fasig/scalable_radio_array/thomas_test.sh"
+descriptive_name = "thomas_test_"+args.args[0]
 
 if "-n" in args.args:
     descriptive_name += "_n"+args.args[args.args.index("-n")+1]
