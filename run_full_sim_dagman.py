@@ -40,9 +40,9 @@ parser.add_argument('--ara', action="store_true",
 parser.add_argument('--straw', action="store_true",
                     help="""If present, full_sim_strawman script will be used
                          instead of full_sim script""")
-parser.add_argument('--maxjobs', type=int, default=250,
+parser.add_argument('--maxjobs', type=int, default=0,
                     help="""Maximum number of jobs to submit at once
-                         (default 100)""")
+                         (default no limit)""")
 parser.add_argument('--args', nargs=argparse.REMAINDER,
                     help="""Additional arguments beyond this are passed on
                          to the full_sim scripts""")
@@ -84,7 +84,7 @@ logfile_index = -1
 if "-l" in args.args:
     logfile_index = args.args.index("-l") + 1
     logfile_name = os.path.basename(args.args[logfile_index])
-    # logfile_dirname = os.path.dirname(args.args[logfile_index])
+    logfile_dirname = os.path.dirname(args.args[logfile_index])
 
 # Declare the error, output, log, and submit directories for Condor job
 error = '/scratch/fasig/pycondor'
@@ -93,7 +93,7 @@ log = '/scratch/fasig/pycondor'
 submit = '/scratch/fasig/pycondor'
 
 # Setting up the PyCondor Dagman
-dag = Dagman(descriptive_name, submit=submit, verbose=2)
+dag = Dagman(descriptive_name, submit=submit, verbose=0)
 
 # Adding arguments to jobs
 for energy in args.energies:
@@ -117,16 +117,20 @@ for energy in args.energies:
             args.args[logfile_index] = replaced_name
             transfer_files.append(replaced_name)
             file_remaps.append(replaced_name+'='+
-                               os.path.join(output_dirname, replaced_name))
+                               os.path.join(logfile_dirname, replaced_name))
         job = Job(descriptive_name+"_"+energy+"_"+str(i).zfill(zfill_amount),
                   executable=script_file, output=output, error=error,
                   log=log, submit=submit, #request_memory="5GB",
                   extra_lines=["should_transfer_files = YES",
                                "transfer_output_files = "+", ".join(transfer_files),
                                'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
-                               "when_to_transfer_output = ON_EXIT_OR_EVICT"])
+                               "when_to_transfer_output = ON_EXIT_OR_EVICT"],
+                  verbose=2)
         job.add_arg(" ".join([energy]+args.args))
         dag.add_job(job)
 
 # Write all necessary submit files and submit dagman to Condor
-dag.build_submit(submit_options="-maxjobs "+str(args.maxjobs))
+if args.maxjobs>0:
+    dag.build_submit(submit_options="-maxjobs "+str(args.maxjobs))
+else:
+    dag.build_submit()
