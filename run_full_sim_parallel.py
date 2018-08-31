@@ -14,6 +14,7 @@ from __future__ import division, print_function
 
 # Standard libraries
 import argparse
+import os.path
 
 # Custom libraries
 from pycondor import Job
@@ -73,41 +74,52 @@ zfill_amount = len(str(args.iterations-1))
 output_index = -1
 if "-o" in args.args:
     output_index = args.args.index("-o") + 1
-    output_name = args.args[output_index]
+    output_name = os.path.basename(args.args[output_index])
+    output_dirname = os.path.dirname(args.args[output_index])
 
 logfile_index = -1
 if "-l" in args.args:
     logfile_index = args.args.index("-l") + 1
-    logfile_name = args.args[logfile_index]
+    logfile_name = os.path.basename(args.args[logfile_index])
+    # logfile_dirname = os.path.dirname(args.args[logfile_index])
 
 # Declare the error, output, log, and submit directories for Condor Job
-error = '/data/user/fasig/pycondor'
-output = '/data/user/fasig/pycondor'
-log = '/data/user/fasig/pycondor'
-submit = '/data/user/fasig/pycondor'
+error = '/scratch/fasig/pycondor'
+output = '/scratch/fasig/pycondor'
+log = '/scratch/fasig/pycondor'
+submit = '/scratch/fasig/pycondor'
 
 # Setting up a PyCondor Job
 job = Job(descriptive_name, script_file,
           error=error, output=output,
-          log=log, submit=submit, verbose=2)
+          log=log, submit=submit, verbose=2,
+#          initialdir=output_dirname,
+          extra_lines=["should_transfer_files = YES",
+                       "transfer_output_files = output/",
+                       "when_to_transfer_output = ON_EXIT_OR_EVICT"])
         #   request_memory="5GB")
 
 # Adding arguments to job
+file_remaps = []
 for energy in args.energies:
     for i in range(args.iterations):
         if output_index!=-1:
             replaced_name = output_name.replace("ENERGY", energy)
             replaced_name = replaced_name.replace("ITERATION",
                                                   str(i).zfill(zfill_amount))
-            args.args[output_index] = replaced_name
+            args.args[output_index] = os.path.join("output", replaced_name)
+            file_remaps.append(replaced_name+'='+os.path.join(output_dirname, replaced_name))
         if logfile_index!=-1:
             o = args.args[output_index]
             replaced_name = logfile_name.replace("OUTPUT", o[:o.rindex(".")])
             replaced_name = replaced_name.replace("ENERGY", energy)
             replaced_name = replaced_name.replace("ITERATION",
                                                   str(i).zfill(zfill_amount))
-            args.args[logfile_index] = replaced_name
+            args.args[logfile_index] = os.path.join("output", replaced_name)
         job.add_arg(" ".join([energy]+args.args))
+
+# Make sure output files are placed where expected
+job.extra_lines.append('transfer_output_remaps = "'+' ; '.join(file_remaps)+'"')
 
 # Write all necessary submit files and submit job to Condor
 job.build_submit()
