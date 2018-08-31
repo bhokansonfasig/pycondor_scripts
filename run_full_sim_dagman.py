@@ -43,6 +43,9 @@ parser.add_argument('--straw', action="store_true",
 parser.add_argument('--maxjobs', type=int, default=0,
                     help="""Maximum number of jobs to submit at once
                          (default no limit)""")
+parser.add_argument('-v', '--verbose', action="store_true",
+                    help="""If present, print all debugging messages from
+                    pycondor""")
 parser.add_argument('--args', nargs=argparse.REMAINDER,
                     help="""Additional arguments beyond this are passed on
                          to the full_sim scripts""")
@@ -93,7 +96,7 @@ log = '/scratch/fasig/pycondor'
 submit = '/scratch/fasig/pycondor'
 
 # Setting up the PyCondor Dagman
-dag = Dagman(descriptive_name, submit=submit, verbose=0)
+dag = Dagman(descriptive_name, submit=submit, verbose=2 if args.verbose else 0)
 
 # Adding arguments to jobs
 for energy in args.energies:
@@ -125,7 +128,7 @@ for energy in args.energies:
                                "transfer_output_files = "+", ".join(transfer_files),
                                'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
                                "when_to_transfer_output = ON_EXIT_OR_EVICT"],
-                  verbose=2)
+                  verbose=2 if args.verbose else 0)
         job.add_arg(" ".join([energy]+args.args))
         dag.add_job(job)
 
