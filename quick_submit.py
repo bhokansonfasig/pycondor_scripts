@@ -38,7 +38,8 @@ submit = '/scratch/fasig/pycondor'
 # Setting up a PyCondor Job
 job = Job(script_name, script_file,
           error=error, output=output,
-          log=log, submit=submit, verbose=2)
+          log=log, submit=submit, verbose=2,
+          initialdir='/home/fasig/pycondor_scripts')
 
 # Adding arguments to job
 if len(options)>0:
