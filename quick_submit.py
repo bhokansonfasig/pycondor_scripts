@@ -22,7 +22,10 @@ from pycondor import Job
 # Get script and options
 script_file = sys.argv[1]
 start_index = script_file.rfind("/")+1
-extension_index = script_file.index(".")
+try:
+    extension_index = script_file.index(".")
+except ValueError:
+    extension_index = len(script_file)
 script_name = script_file[start_index:extension_index]
 options = sys.argv[2:]
 
