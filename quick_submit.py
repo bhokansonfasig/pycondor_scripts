@@ -30,10 +30,10 @@ script_name = script_file[start_index:extension_index]
 options = sys.argv[2:]
 
 # Declare the error, output, log, and submit directories for Condor Job
-error = '/data/user/fasig/pycondor'
-output = '/data/user/fasig/pycondor'
-log = '/data/user/fasig/pycondor'
-submit = '/data/user/fasig/pycondor'
+error = '/scratch/fasig/pycondor'
+output = '/scratch/fasig/pycondor'
+log = '/scratch/fasig/pycondor'
+submit = '/scratch/fasig/pycondor'
 
 # Setting up a PyCondor Job
 job = Job(script_name, script_file,
