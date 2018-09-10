@@ -39,7 +39,9 @@ submit = '/scratch/fasig/pycondor'
 job = Job(script_name, script_file,
           error=error, output=output,
           log=log, submit=submit, verbose=2,
-          initialdir='/home/fasig/pycondor_scripts')
+          initialdir='/home/fasig/pycondor_scripts',
+          extra_lines=["should_transfer_files = YES",
+                       "when_to_transfer_output = ON_EXIT"])
 
 # Adding arguments to job
 if len(options)>0:
