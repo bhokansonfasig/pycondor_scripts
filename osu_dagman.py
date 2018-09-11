@@ -22,7 +22,7 @@ from pycondor import Job, Dagman
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="""Script for submitting many
                                  full_sim scripts to HTCondor easily.""")
-parser.add_argument('inputs', type=int,
+parser.add_argument('inputs', nargs="+",
                     help="""Input files on which to run (each full_sim script
                          will run on a separate file)""")
 parser.add_argument('--maxjobs', type=int, default=0,
