@@ -64,19 +64,19 @@ for i, infile in enumerate(args.inputs):
     file_remaps = []
     if output_index!=-1:
         replaced_name = output_name.replace("ITERATION",
-                                                str(i).zfill(4))
+                                            str(i+1).zfill(4))
         args.args[output_index] = replaced_name
         transfer_files.append(replaced_name)
         file_remaps.append(replaced_name+'='+
-                            os.path.join(output_dirname, replaced_name))
-    job = Job(descriptive_name+"_"+str(i).zfill(4),
-                executable=script_file, output=output, error=error,
-                log=log, submit=submit, #request_memory="5GB",
-                extra_lines=["should_transfer_files = YES",
-                            "transfer_output_files = "+", ".join(transfer_files),
-                            'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
-                            "when_to_transfer_output = ON_EXIT_OR_EVICT"],
-                verbose=2 if args.verbose else 0)
+                           os.path.join(output_dirname, replaced_name))
+    job = Job(descriptive_name+"_"+str(i+1).zfill(4),
+              executable=script_file, output=output, error=error,
+              log=log, submit=submit, #request_memory="5GB",
+              extra_lines=["should_transfer_files = YES",
+                           "transfer_output_files = "+", ".join(transfer_files),
+                           'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
+                           "when_to_transfer_output = ON_EXIT_OR_EVICT"],
+              verbose=2 if args.verbose else 0)
     job.add_arg(" ".join([infile]+args.args))
     dag.add_job(job)
 
