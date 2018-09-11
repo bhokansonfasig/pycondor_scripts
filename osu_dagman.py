@@ -72,11 +72,10 @@ for i, infile in enumerate(args.inputs):
     job = Job(descriptive_name+"_"+str(i+1).zfill(4),
               executable=script_file, output=output, error=error,
               log=log, submit=submit, #request_memory="5GB",
-              request_disk="20GB",
               extra_lines=["should_transfer_files = YES",
                            "transfer_output_files = "+", ".join(transfer_files),
                            'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
-                           "when_to_transfer_output = ON_EXIT_OR_EVICT"],
+                           "when_to_transfer_output = ON_EXIT"],
               verbose=2 if args.verbose else 0)
     job.add_arg(" ".join([infile]+args.args))
     dag.add_job(job)

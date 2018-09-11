@@ -127,7 +127,7 @@ for energy in args.energies:
                   extra_lines=["should_transfer_files = YES",
                                "transfer_output_files = "+", ".join(transfer_files),
                                'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
-                               "when_to_transfer_output = ON_EXIT_OR_EVICT"],
+                               "when_to_transfer_output = ON_EXIT"],
                   verbose=2 if args.verbose else 0)
         job.add_arg(" ".join([energy]+args.args))
         dag.add_job(job)
