@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # coincidence_calculation_dag.py
-# Script for submitting many coincidence_calculation scripts to HTCondor in a dagman
+# Script for submitting many coincidence_calculator scripts to HTCondor in a dagman
 #
 #
 # Ben Hokanson-Fasig
@@ -44,7 +44,7 @@ parser.add_argument('--args', nargs=argparse.REMAINDER,
 args = parser.parse_args()
 
 # Set script and name
-script_file = "/home/fasig/scalable_radio_array/coincidence_calculation.sh"
+script_file = "/home/fasig/scalable_radio_array/coincidence_calculator.sh"
 descriptive_name = "coincidence_calculation_"+args.args[0]
 
 if "-n" in args.args:
