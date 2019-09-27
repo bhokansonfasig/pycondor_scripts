@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 #
-# iterate_python_script.py
+# thesis_work_dag.py
 # Script for submitting many python scripts to HTCondor in a dagman
 #
 #
@@ -73,8 +73,8 @@ for i in range(args.iterations):
     transfer_files = []
     file_remaps = []
     if output_index!=-1:
-        replaced_name = replaced_name.replace("ITERATION",
-                                              str(i).zfill(zfill_amount))
+        replaced_name = output_name.replace("ITERATION",
+                                            str(i).zfill(zfill_amount))
         args.args[output_index] = replaced_name
         transfer_files.append(replaced_name)
         file_remaps.append(replaced_name+'='+
