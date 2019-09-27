@@ -42,13 +42,6 @@ args = parser.parse_args()
 script_file = "/home/fasig/thesis_work/run_python_script.sh"
 descriptive_name = args.script[:-3]+"_"+args.args[0]
 
-if "-n" in args.args:
-    descriptive_name += "_n"+args.args[args.args.index("-n")+1]
-else:
-    descriptive_name += "_n10"
-
-descriptive_name += "x"+str(args.iterations)
-
 zfill_amount = len(str(args.iterations-1))
 
 
@@ -79,16 +72,17 @@ for i in range(args.iterations):
         transfer_files.append(replaced_name)
         file_remaps.append(replaced_name+'='+
                             os.path.join(output_dirname, replaced_name))
-    job = Job(descriptive_name+"_"+energy+"_"+str(i).zfill(zfill_amount),
-                executable=script_file, output=output, error=error,
-                log=log, submit=submit, #request_memory="5GB",
-                extra_lines=["should_transfer_files = YES",
-                            "transfer_output_files = "+
-                            ", ".join(transfer_files),
-                            'transfer_output_remaps = "'+
-                            '; '.join(file_remaps)+'"',
-                            "when_to_transfer_output = ON_EXIT"],
-                verbose=2 if args.verbose else 0)
+    job = Job((descriptive_name+"_"+str(i).zfill(zfill_amount)
+               +"_"+str(args.iterations).zfill(zfill_amount)),
+              executable=script_file, output=output, error=error,
+              log=log, submit=submit, #request_memory="5GB",
+              extra_lines=["should_transfer_files = YES",
+                           "transfer_output_files = "+
+                           ", ".join(transfer_files),
+                           'transfer_output_remaps = "'+
+                           '; '.join(file_remaps)+'"',
+                           "when_to_transfer_output = ON_EXIT"],
+              verbose=2 if args.verbose else 0)
     job.add_arg(" ".join(['--script_args', args.script]+args.args))
     dag.add_job(job)
 
