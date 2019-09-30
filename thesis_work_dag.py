@@ -40,7 +40,7 @@ args = parser.parse_args()
 
 # Set script and name
 script_file = "/home/fasig/thesis_work/run_python_script.sh"
-descriptive_name = args.script[:-3]+"_"+args.args[0]
+descriptive_name = os.path.basename(args.script[:-3])+"_"+args.args[0]
 
 zfill_amount = len(str(args.iterations-1))
 
@@ -83,7 +83,7 @@ for i in range(args.iterations):
                            '; '.join(file_remaps)+'"',
                            "when_to_transfer_output = ON_EXIT"],
               verbose=2 if args.verbose else 0)
-    job.add_arg(" ".join(['--script_args', args.script]+args.args))
+    job.add_arg(" ".join([args.script]+args.args))
     dag.add_job(job)
 
 
