@@ -6,7 +6,7 @@
 #
 # Ben Hokanson-Fasig
 # Created   09/26/18
-# Last edit 09/28/18
+# Last edit 10/31/19
 #
 
 
@@ -19,10 +19,10 @@ import os.path
 # Custom libraries
 from pycondor import Job, Dagman
 
-default_energies = ["1e6", "3e6",
-                    "1e7", "3e7",
-                    "1e8", "3e8",
-                    "1e9", "3e9",
+default_energies = ["1e6", "3.16e6",
+                    "1e7", "3.16e7",
+                    "1e8", "3.16e8",
+                    "1e9", "3.16e9",
                     "1e10"]
 
 # Parse command line arguments
