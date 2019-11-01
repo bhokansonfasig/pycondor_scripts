@@ -118,7 +118,7 @@ else:
             transfer_files = []
             file_remaps = []
             if output_index!=-1:
-                replaced_name = output_name.replace("ENERGY", energy)
+                replaced_name = output_name.replace("ENERGY", energy.replace('.', 'p'))
                 replaced_name = replaced_name.replace("ITERATION",
                                                       str(i).zfill(zfill_amount))
                 args.args[output_index] = replaced_name
