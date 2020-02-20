@@ -6,7 +6,7 @@
 #
 # Ben Hokanson-Fasig
 # Created   09/27/19
-# Last edit 09/27/19
+# Last edit 02/20/20
 #
 
 
@@ -32,6 +32,10 @@ parser.add_argument('--maxjobs', type=int, default=0,
 parser.add_argument('-v', '--verbose', action="store_true",
                     help="If present, print all debugging messages from "+
                     "pycondor")
+parser.add_argument('--memory',
+                    help="Amount of memory to be requested")
+parser.add_argument('--disk',
+                    help="Amount of disk to be requested")
 parser.add_argument('--args', nargs=argparse.REMAINDER,
                     help="Additional arguments beyond this are passed on "+
                     "to the script""")
@@ -75,7 +79,9 @@ for i in range(args.iterations):
     job = Job((descriptive_name+"_"+str(i).zfill(zfill_amount)
                +"_"+str(args.iterations).zfill(zfill_amount)),
               executable=script_file, output=output, error=error,
-              log=log, submit=submit, #request_memory="5GB",
+              log=log, submit=submit,
+              request_memory=args.memory,
+              request_disk=args.disk,
               extra_lines=["should_transfer_files = YES",
                            "transfer_output_files = "+
                            ", ".join(transfer_files),
