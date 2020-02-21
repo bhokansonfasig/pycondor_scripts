@@ -36,6 +36,8 @@ parser.add_argument('--memory',
                     help="Amount of memory to be requested")
 parser.add_argument('--disk',
                     help="Amount of disk to be requested")
+parser.add_argument('--no_transfer_files', action="store_true",
+                    help="If present, don't transfer files back intelligently")
 parser.add_argument('--args', nargs=argparse.REMAINDER,
                     help="Additional arguments beyond this are passed on "+
                     "to the script""")
@@ -72,22 +74,28 @@ for i in range(args.iterations):
     if output_index!=-1:
         replaced_name = output_name.replace("ITERATION",
                                             str(i).zfill(zfill_amount))
-        args.args[output_index] = replaced_name
-        transfer_files.append(replaced_name)
-        file_remaps.append(replaced_name+'='+
-                            os.path.join(output_dirname, replaced_name))
+        if not args.no_transfer_files:
+            args.args[output_index] = replaced_name
+            transfer_files.append(replaced_name)
+            file_remaps.append(replaced_name+'='+
+                               os.path.join(output_dirname, replaced_name))
+            transfer_lines = [
+                "should_transfer_files = YES",
+                "transfer_output_files = "+", ".join(transfer_files),
+                'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
+                "when_to_transfer_output = ON_EXIT"
+            ]
+        else:
+            args.args[output_index] = os.path.join(output_dirname,
+                                                   replaced_name)
+            transfer_lines = None
     job = Job((descriptive_name+"_"+str(i).zfill(zfill_amount)
                +"_"+str(args.iterations).zfill(zfill_amount)),
               executable=script_file, output=output, error=error,
               log=log, submit=submit,
               request_memory=args.memory,
               request_disk=args.disk,
-              extra_lines=["should_transfer_files = YES",
-                           "transfer_output_files = "+
-                           ", ".join(transfer_files),
-                           'transfer_output_remaps = "'+
-                           '; '.join(file_remaps)+'"',
-                           "when_to_transfer_output = ON_EXIT"],
+              extra_lines=transfer_lines,
               verbose=2 if args.verbose else 0)
     job.add_arg(" ".join([args.script]+args.args))
     dag.add_job(job)
