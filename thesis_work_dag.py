@@ -88,7 +88,10 @@ for i in range(args.iterations):
         else:
             args.args[output_index] = os.path.join(output_dirname,
                                                    replaced_name)
-            transfer_lines = None
+            transfer_lines = [
+                "should_transfer_files = YES",
+                "when_to_transfer_output = ON_EXIT"
+            ]
     job = Job((descriptive_name+"_"+str(i).zfill(zfill_amount)
                +"_"+str(args.iterations).zfill(zfill_amount)),
               executable=script_file, output=output, error=error,
