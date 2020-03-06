@@ -71,6 +71,10 @@ dag = Dagman(descriptive_name, submit=submit, verbose=2 if args.verbose else 0)
 for i in range(args.iterations):
     transfer_files = []
     file_remaps = []
+    transfer_lines = [
+        "should_transfer_files = YES",
+        "when_to_transfer_output = ON_EXIT"
+    ]
     if output_index!=-1:
         replaced_name = output_name.replace("ITERATION",
                                             str(i).zfill(zfill_amount))
