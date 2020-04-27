@@ -6,7 +6,7 @@
 #
 # Ben Hokanson-Fasig
 # Created   09/27/19
-# Last edit 02/20/20
+# Last edit 04/27/20
 #
 
 
@@ -23,6 +23,8 @@ from pycondor import Job, Dagman
 parser = argparse.ArgumentParser(description="Script for submitting many "+
                                  "python scripts to HTCondor in a dagman.")
 parser.add_argument('script', help="Script to be run")
+parser.add_argument('--fancy_name', action='store_true',
+                    help="Create fancy job name based on first script argument")
 parser.add_argument('--iterations', type=int, default=1,
                     help="Number of iterations to run (each script with "+
                     "different options is submitted this many times)")
@@ -46,7 +48,9 @@ args = parser.parse_args()
 
 # Set script and name
 script_file = "/home/fasig/thesis_work/run_python_script.sh"
-descriptive_name = os.path.basename(args.script[:-3])+"_"+args.args[0]
+descriptive_name = os.path.basename(os.path.splitext(args.script)[0])
+if args.fancy_name:
+    descriptive_name += "_"+args.args[0]
 
 zfill_amount = len(str(args.iterations-1))
 
