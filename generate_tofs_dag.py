@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(description="Script for submitting many "+
                                  "python scripts to HTCondor in a dagman.")
 parser.add_argument('radii', nargs='+',
                     help="Radii to submit jobs for")
-parser.add_argument('-s', '--split', type=int, default=0,
+parser.add_argument('-s', '--split', type=int, default=1,
                     help="Number of subsets in detector. If unspecified, the "+
                     "whole detector is used")
 parser.add_argument('--maxjobs', type=int, default=0,
@@ -78,46 +78,49 @@ for r in args.radii:
         "should_transfer_files = YES",
         "when_to_transfer_output = ON_EXIT"
     ]
-    if output_index!=-1:
-        if not args.no_transfer_files:
-            args.args[output_index] = replaced_name
-            transfer_files.append(replaced_name)
-            file_remaps.append(replaced_name+'='+
-                               os.path.join(output_dirname, replaced_name))
-            transfer_lines = [
-                "should_transfer_files = YES",
-                "transfer_output_files = "+", ".join(transfer_files),
-                'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
-                "when_to_transfer_output = ON_EXIT"
-            ]
-        else:
-            args.args[output_index] = os.path.join(output_dirname,
-                                                   replaced_name)
-            transfer_lines = [
-                "should_transfer_files = YES",
-                "when_to_transfer_output = ON_EXIT"
-            ]
-    if args.split>0:
-        for sub in range(args.split):
-            job = Job((descriptive_name+"_"+str(r).zfill(zfill_amount)+"_"+
-                       str(sub).zfill(len(str(args.split-1)))),
-                      executable=script_file, output=output, error=error,
-                      log=log, submit=submit,
-                      request_memory=args.memory,
-                      request_disk=args.disk,
-                      extra_lines=transfer_lines,
-                      verbose=2 if args.verbose else 0)
-            job.add_arg(" ".join([tof_script]+args.args+["--subset", str(sub)]))
-            dag.add_job(job)
-    else:
-        job = Job(descriptive_name+"_"+str(r).zfill(zfill_amount),
+    for sub in range(args.split):
+        if output_index!=-1:
+            replaced_name = output_name.replace("RADIUS",
+                                                str(r).zfill(zfill_amount))
+            if args.split>1:
+                replaced_name = replaced_name.replace("SUBSET",
+                                                      str(sub).zfill(len(str(args.split-1))))
+            if not args.no_transfer_files:
+                args.args[output_index] = replaced_name
+                transfer_files.append(replaced_name)
+                file_remaps.append(replaced_name+'='+
+                                os.path.join(output_dirname, replaced_name))
+                transfer_lines = [
+                    "should_transfer_files = YES",
+                    "transfer_output_files = "+", ".join(transfer_files),
+                    'transfer_output_remaps = "'+'; '.join(file_remaps)+'"',
+                    "when_to_transfer_output = ON_EXIT"
+                ]
+            else:
+                args.args[output_index] = os.path.join(output_dirname,
+                                                    replaced_name)
+                transfer_lines = [
+                    "should_transfer_files = YES",
+                    "when_to_transfer_output = ON_EXIT"
+                ]
+
+        job_name = descriptive_name+"_"+str(r).zfill(zfill_amount)
+        if args.split>1:
+            job_name += "_"+str(sub).zfill(len(str(args.split-1)))
+
+        job = Job(job_name,
                   executable=script_file, output=output, error=error,
                   log=log, submit=submit,
                   request_memory=args.memory,
                   request_disk=args.disk,
                   extra_lines=transfer_lines,
                   verbose=2 if args.verbose else 0)
-        job.add_arg(" ".join([tof_script]+args.args))
+
+        job_args = [tof_script] + args.args
+        if args.split>1:
+            job_args += ["--subset", str(sub)]
+
+        job.add_arg(" ".join([tof_script]+args.args+["--subset", str(sub)]))
         dag.add_job(job)
 
 
