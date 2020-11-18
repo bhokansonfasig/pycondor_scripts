@@ -116,7 +116,7 @@ for r in args.radii:
                   extra_lines=transfer_lines,
                   verbose=2 if args.verbose else 0)
 
-        job_args = [tof_script] + args.args
+        job_args = [tof_script] + args.args + ["--shells 1", "--rmin", str(r), "--rmax", str(r)]
         if args.split>1:
             job_args += ["--subset", str(sub)]
 
