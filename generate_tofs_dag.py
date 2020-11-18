@@ -120,7 +120,7 @@ for r in args.radii:
         if args.split>1:
             job_args += ["--subset", str(sub)]
 
-        job.add_arg(" ".join([tof_script]+args.args+["--subset", str(sub)]))
+        job.add_arg(" ".join(job_args))
         dag.add_job(job)
 
 
