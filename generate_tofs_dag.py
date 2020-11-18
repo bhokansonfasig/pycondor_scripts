@@ -98,7 +98,7 @@ for r in args.radii:
                 "when_to_transfer_output = ON_EXIT"
             ]
     if args.split>0:
-        for sub in args.split:
+        for sub in range(args.split):
             job = Job((descriptive_name+"_"+str(r).zfill(zfill_amount)+"_"+
                        str(sub).zfill(len(str(args.split-1)))),
                       executable=script_file, output=output, error=error,
